@@ -51,11 +51,16 @@
         }
 
         if(request){
-            if(query) url += '?' + utils.toQuery(query);
+            if(query) url += ((url.indexOf('?') > -1) ? '&' : '?') + utils.toQuery(query);
             request.open(method, url, true);
             request.onload = function(){
-                methods.success.apply(methods, utils.parse(request));
-                methods.always.apply();
+                if(request.statusText === 'OK' && request.status === 200){
+                    methods.success.apply(methods, utils.parse(request));
+                    methods.always.apply();    
+                } else {
+                    methods.error.apply(methods, utils.parse(request));
+                    methods.always.apply();
+                }
             };
             request.onerror = function(){
                 methods.error.apply(methods, utils.parse(request));
