@@ -40,7 +40,8 @@
                 always: function(){}
             },
             request = null,
-            callbacks = {};
+            callbacks = {},
+            protocol = (window.location.protocol === 'file:') ? 'https:' : window.location.protocol;
 
         if(window.XDomainRequest){
             request = new XDomainRequest();
@@ -52,7 +53,7 @@
 
         if(request){
             if(query) url += ((url.indexOf('?') > -1) ? '&' : '?') + utils.toQuery(query);
-            request.open(method, url, true);
+            request.open(method, (url.indexOf('http') > -1) ? url : protocol+url, true);
             request.onload = function(){
                 if(request.statusText === 'OK' && request.status === 200){
                     methods.success.apply(methods, utils.parse(request));
