@@ -22,7 +22,7 @@
             result = req.responseText;
         }
         return [result, req];
-    }
+    };
 
     utils.toQuery = function(q){
         var key,
@@ -31,7 +31,18 @@
             params.push(key+'='+q[key]);
         }
         return params.join('&');
-    }
+    };
+
+    utils.verifyQuery = function(url,query){
+        var result = {},
+            parameter = null;
+        for(parameter in query){
+            if(!(new RegExp('[?|&]'+parameter+'=')).test(url)){
+                result[parameter] = query[parameter];
+            }
+        }
+        return result;
+    };
 
     xhr = function(method, url, data, query){
         var methods = {
@@ -42,6 +53,10 @@
             request = null,
             callbacks = {},
             protocol = (window.location.protocol === 'file:') ? 'https:' : window.location.protocol;
+
+        if(method === 'GET'){
+            query = utils.verifyQuery(url,query);
+        }
 
         if(window.XDomainRequest){
             request = new XDomainRequest();
@@ -95,21 +110,21 @@
         };
 
         return callbacks;
-    }
+    };
 
-    exports['get'] = function (url, query) {
+    exports.get = function (url, query) {
         return xhr('GET', url, {}, query);
     };
 
-    exports['put'] = function (url, data, query) {
+    exports.put = function (url, data, query) {
         return xhr('PUT', url, data, query);
     };
 
-    exports['post'] = function (url, data, query) {
+    exports.post = function (url, data, query) {
         return xhr('POST', url, data, query);
     };
 
-    exports['delete'] = function (url, query) {
+    exports.delete = function (url, query) {
         return xhr('DELETE', url, {}, query);
     };
 
