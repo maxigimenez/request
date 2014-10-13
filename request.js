@@ -33,6 +33,17 @@
         return params.join('&');
     }
 
+    utils.verifyQuery = function(url,query){
+        var result = {},
+            parameter = null;
+        for(parameter in query){
+            if(!(new RegExp('[?|&]'+parameter+'=')).test(url)){
+                result[parameter] = query[parameter];
+            }
+        }
+        return result;
+    }
+
     xhr = function(method, url, data, query){
         var methods = {
                 success: function(){},
@@ -42,6 +53,10 @@
             request = null,
             callbacks = {},
             protocol = (window.location.protocol === 'file:') ? 'https:' : window.location.protocol;
+
+        if(method === 'GET'){
+            query = utils.verifyQuery(url,query);
+        }
 
         if(window.XDomainRequest){
             request = new XDomainRequest();
