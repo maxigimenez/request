@@ -60,6 +60,8 @@
 
         if(window.XDomainRequest){
             request = new XDomainRequest();
+            request.onprogress = function(){ };
+            request.ontimeout = function(){ };
         }else if(window.ActiveXObject){
             request = new ActiveXObject('Microsoft.XMLHTTP'); 
         }else if(window.XMLHttpRequest){
