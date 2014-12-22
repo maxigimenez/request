@@ -60,6 +60,8 @@
 
         if(window.XDomainRequest){
             request = new XDomainRequest();
+            request.onprogress = function(){ };
+            request.ontimeout = function(){ };
         }else if(window.ActiveXObject){
             request = new ActiveXObject('Microsoft.XMLHTTP'); 
         }else if(window.XMLHttpRequest){
@@ -70,7 +72,7 @@
             if(query) url += ((url.indexOf('?') > -1) ? '&' : '?') + utils.toQuery(query);
             request.open(method, (url.indexOf('http') > -1) ? url : protocol+url, true);
             request.onload = function(){
-                if(request.statusText === 'OK' && request.status === 200){
+                if((request.statusText === 'OK' && request.status === 200) || typeof request.statusText === 'undefined'){
                     methods.success.apply(methods, utils.parse(request));
                     methods.always.apply();    
                 } else {
