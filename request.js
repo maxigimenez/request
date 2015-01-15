@@ -85,7 +85,9 @@
                 methods.always.apply();
             };
             if(method === 'POST'){
-                request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                if(!window.XDomainRequest){
+                    request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                }
                 data = utils.toQuery(data);
             }
             if(method === 'GET'){
