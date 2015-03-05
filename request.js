@@ -9,7 +9,7 @@
 })(this, function (root) {
 
     'use strict';
-    
+
     var exports = {},
         utils = {},
         xhr;
@@ -63,7 +63,7 @@
             request.onprogress = function(){ };
             request.ontimeout = function(){ };
         }else if(window.ActiveXObject){
-            request = new ActiveXObject('Microsoft.XMLHTTP'); 
+            request = new ActiveXObject('Microsoft.XMLHTTP');
         }else if(window.XMLHttpRequest){
             request = new XMLHttpRequest();
         }
@@ -74,14 +74,14 @@
             request.onload = function(){
                 if((request.statusText === 'OK' && request.status === 200) || typeof request.statusText === 'undefined'){
                     methods.success.apply(methods, utils.parse(request));
-                    methods.always.apply();    
+                    methods.always.apply();
                 } else {
                     methods.error.apply(methods, utils.parse(request));
                     methods.always.apply();
                 }
             };
-            request.onerror = function(){
-                methods.error.apply(methods, utils.parse(request));
+            request.onerror = function(e){
+                methods.error.apply(methods, e);
                 methods.always.apply();
             };
             if(method === 'POST'){
@@ -116,15 +116,15 @@
         return callbacks;
     };
 
-    exports['get'] = function (url, query) {
+    exports.get = function (url, query) {
         return xhr('GET', url, {}, query);
     };
 
-    exports['put'] = function (url, data, query) {
+    exports.put = function (url, data, query) {
         return xhr('PUT', url, data, query);
     };
 
-    exports['post'] = function (url, data, query) {
+    exports.post = function (url, data, query) {
         return xhr('POST', url, data, query);
     };
 
