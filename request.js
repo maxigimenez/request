@@ -73,15 +73,15 @@
             request.open(method, (url.indexOf('http') > -1) ? url : protocol+url, true);
             request.onload = function(){
                 if((request.statusText === 'OK' && request.status === 200) || typeof request.statusText === 'undefined'){
-                    methods.success.apply(methods, utils.parse(request));
+                    methods.success.apply(request, utils.parse(request));
                     methods.always.apply();
                 } else {
-                    methods.error.apply(methods, utils.parse(request));
+                    methods.error.apply(request, utils.parse(request));
                     methods.always.apply();
                 }
             };
             request.onerror = function(e){
-                methods.error.apply(methods, e);
+                methods.error.apply(request, e);
                 methods.always.apply();
             };
             if(method === 'POST'){
