@@ -116,17 +116,19 @@
         return callbacks;
     };
 
-    exports.get = function (url, query) {
+    /*jshint -W069 */
+    exports['get'] = function (url, query) {
         return xhr('GET', url, {}, query);
     };
 
-    exports.put = function (url, data, query) {
+    exports['put'] = function (url, data, query) {
         return xhr('PUT', url, data, query);
     };
 
-    exports.post = function (url, data, query) {
+    exports['post'] = function (url, data, query) {
         return xhr('POST', url, data, query);
     };
+    /*jshint +W069 */
 
     exports['delete'] = function (url, query) {
         return xhr('DELETE', url, {}, query);
