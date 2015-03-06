@@ -44,6 +44,27 @@
         return result;
     };
 
+    utils.validateHTTPStatus = function(code){
+        var result = false;
+        code = parseInt(code);
+        /*
+        200 OK
+        201 Created
+        202 Accepted
+        203 Non-Authoritative Information (since HTTP/1.1)
+        204 No Content
+        205 Reset Content
+        206 Partial Content
+        207 Multi-Status (WebDAV; RFC 4918)
+        208 Already Reported (WebDAV; RFC 5842)
+        226 IM Used (RFC 3229)
+         */
+        if(code >= 200 && code <230){
+            result = true;
+        }
+        return result;
+    };
+
     xhr = function(method, url, data, query){
         var methods = {
                 success: function(){},
@@ -72,7 +93,7 @@
             if(query) url += ((url.indexOf('?') > -1) ? '&' : '?') + utils.toQuery(query);
             request.open(method, (url.indexOf('http') > -1) ? url : protocol+url, true);
             request.onload = function(){
-                if((request.statusText === 'OK' && request.status === 200) || typeof request.statusText === 'undefined'){
+                if(utils.validateHTTPStatus(request.status) || request.statusText === 'OK' || typeof request.statusText === 'undefined'){
                     methods.success.apply(request, utils.parse(request));
                     methods.always.apply();
                 } else {
