@@ -95,15 +95,14 @@
             request.onload = function(){
                 if(utils.validateHTTPStatus(request.status) || request.statusText === 'OK' || typeof request.statusText === 'undefined'){
                     methods.success.apply(request, utils.parse(request));
-                    methods.always.apply();
                 } else {
                     methods.error.apply(request, utils.parse(request));
-                    methods.always.apply();
                 }
+                methods.always.apply(request, []);
             };
             request.onerror = function(e){
-                methods.error.apply(request, e);
-                methods.always.apply();
+                methods.error.apply(request, [e]);
+                methods.always.apply(request, []);
             };
             if(method === 'POST'){
                 if(!window.XDomainRequest){
