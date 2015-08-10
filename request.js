@@ -65,7 +65,7 @@
         return result;
     };
 
-    xhr = function(method, url, data, query){
+    xhr = function(method, url, data, query, headers){
         var methods = {
                 success: function(){},
                 error: function(){},
@@ -73,20 +73,22 @@
             },
             request = null,
             callbacks = {},
-            protocol = (window.location.protocol === 'file:') ? 'https:' : window.location.protocol;
+            protocol = (window.location.protocol === 'file:') ? 'https:' : window.location.protocol,
+            supportHeaders = false;
 
         if(method === 'GET'){
             query = utils.verifyQuery(url,query);
         }
 
-        if(window.XDomainRequest){
+        if(window.XMLHttpRequest){
+            request = new XMLHttpRequest();
+            supportHeaders = true;
+        }else if(window.XDomainRequest){
             request = new XDomainRequest();
             request.onprogress = function(){ };
             request.ontimeout = function(){ };
         }else if(window.ActiveXObject){
             request = new ActiveXObject('Microsoft.XMLHTTP');
-        }else if(window.XMLHttpRequest){
-            request = new XMLHttpRequest();
         }
 
         if(request){
@@ -104,8 +106,13 @@
                 methods.error.apply(request, [e]);
                 methods.always.apply(request, []);
             };
+            if(headers && supportHeaders){
+                for(var header in headers){
+                    request.setRequestHeader(header, headers[header]);
+                }
+            }
             if(method === 'POST'){
-                if(!window.XDomainRequest){
+                if(supportHeaders){
                     request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
                 }
                 data = utils.toQuery(data);
@@ -137,21 +144,21 @@
     };
 
     /*jshint -W069 */
-    exports['get'] = function (url, query) {
-        return xhr('GET', url, {}, query);
+    exports['get'] = function (url, query, headers) {
+        return xhr('GET', url, {}, query, headers);
     };
 
-    exports['put'] = function (url, data, query) {
-        return xhr('PUT', url, data, query);
+    exports['put'] = function (url, data, query, headers) {
+        return xhr('PUT', url, data, query, headers);
     };
 
-    exports['post'] = function (url, data, query) {
-        return xhr('POST', url, data, query);
+    exports['post'] = function (url, data, query, headers) {
+        return xhr('POST', url, data, query, headers);
     };
     /*jshint +W069 */
 
-    exports['delete'] = function (url, query) {
-        return xhr('DELETE', url, {}, query);
+    exports['delete'] = function (url, query, headers) {
+        return xhr('DELETE', url, {}, query, headers);
     };
 
     return exports;
