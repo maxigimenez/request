@@ -80,13 +80,13 @@
             query = utils.verifyQuery(url,query);
         }
 
-        if(window.XMLHttpRequest){
-            request = new XMLHttpRequest();
-            supportHeaders = true;
-        }else if(window.XDomainRequest){
+        if(window.XDomainRequest){
             request = new XDomainRequest();
             request.onprogress = function(){ };
             request.ontimeout = function(){ };
+        }else if(window.XMLHttpRequest){
+            request = new XMLHttpRequest();
+            supportHeaders = true;
         }else if(window.ActiveXObject){
             request = new ActiveXObject('Microsoft.XMLHTTP');
         }
